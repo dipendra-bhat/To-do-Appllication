@@ -1,42 +1,87 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('todo-form');
-    const input = document.getElementById('task-input');
-    const list = document.getElementById('todo-list');
+const title = document.querySelector('input[name="title"]');
+const description = document.querySelector('textarea');
+const submitBtn= document.querySelector('#submit');
+const notesList = document.querySelector('#displayNotes');
 
-    let tasks = [];
+submitBtn.addEventListener('click',(event)=>{
+    event.preventDefault();
+    const currentTitle = title.value;
+    const curretDescription = description.value;
 
-    function renderTasks() {
-        list.innerHTML = '';
-        tasks.forEach((task, index) => {
-            const li = document.createElement('li');
+    const newNote = document.createElement('div');
+    newNote.className = "notes";
 
-            const span = document.createElement('span');
-            span.className = 'task-text';
-            span.textContent = task;
 
-            const removeBtn = document.createElement('button');
-            removeBtn.textContent = 'Remove';
-            removeBtn.className = 'remove-btn';
-            removeBtn.onclick = () => {
-                tasks.splice(index, 1);
-                renderTasks();
-            };
+    const newTitle = document.createElement('h3');
+    newTitle.className = 'title';
+    newTitle.innerText = currentTitle;
 
-            li.appendChild(span);
-            li.appendChild(removeBtn);
-            list.appendChild(li);
-        });
-    }
+    
+    const newdescr = document.createElement('p');
+    newdescr.className = 'description';
+    newdescr.innerText = curretDescription;
+    
+    
+    const delbtn = document.createElement('button');
+    delbtn.innerText = 'Delete'
+    delbtn.className = 'delbtn';
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const task = input.value.trim();
-        if (task) {
-            tasks.push(task);
-            input.value = '';
-            renderTasks();
-        }
-    });
+    
+    const updatebtn = document.createElement('button');
+    updatebtn.innerText = 'update';
+    updatebtn.className = 'updatebtn';
 
-    renderTasks(); // Initial render
+    
+    const updTitle = document.createElement('input');
+    updTitle.type = 'text';
+    const updDescr = document.createElement('textarea');
+    updTitle.style.display = 'none';
+    updDescr.style.display = 'none';
+
+    
+    newNote.appendChild(newTitle);
+    newNote.append(newdescr);
+    newNote.append(delbtn);
+    newNote.append(updatebtn);
+    newNote.append(updTitle,updDescr);
+
+    
+    notesList.append(newNote);
+
+    
+    updatebtn.addEventListener('click',()=>{
+        newTitle.style.display = 'none';
+        newdescr.style.display = 'none';
+
+        updTitle.style.display = 'block';
+        updDescr.style.display = 'block';
+
+        updTitle.value = newTitle.innerText;
+        updDescr.value = newdescr.innerText;
+
+        const okBtn = document.createElement('button');
+        okBtn.innerText = 'OK'
+        okBtn.className = 'okBtn'
+
+        newNote.append(okBtn);
+
+        okBtn.addEventListener('click',()=>{
+            newTitle.innerText = updTitle.value;
+            newdescr.innerText = updDescr.value;
+
+            updTitle.style.display = 'none'
+            updDescr.style.display = 'none'
+
+            newTitle.style.display = 'block'
+            newdescr.style.display = 'block'
+
+            okBtn.remove();
+        })
+    })
+
+    
+    delbtn.addEventListener('click',()=>{
+        newNote.remove();
+    })
+
 });
